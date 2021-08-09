@@ -21,10 +21,9 @@ namespace Snake
         public void Init(ITarget target)
         {
             _target = target ?? throw new ArgumentNullException(nameof(target));
-        }
 
-        private void Awake()
-        {
+            _target.PositionChanged += OnPositionChanged;
+            
             _snakeFragmentPool = new SimplePool<SnakeFragment>(_snakeFragmentPrefab, transform);
             _snakeFragmentsInUse = new Queue<SnakeFragment>();
             _path = new CirclesPathArranger(_pathCapacity, _snakeFragmentPrefab.Radius);
@@ -32,13 +31,18 @@ namespace Snake
             AddFragment();
             AddFragment();
             AddFragment();
-
         }
 
-        private void Update()
+        private void OnDestroy()
+        {
+            _target.PositionChanged -= OnPositionChanged;
+        }
+
+        private void OnPositionChanged()
         {
             if (Input.GetKeyDown(KeyCode.Space))
                 AddFragment();
+            
             if (_target == null)
                 return;
 
@@ -47,7 +51,7 @@ namespace Snake
             if (_path.Count == 0 || _snakeFragmentsInUse.Count == 0)
                 return;
 
-            UpdateFragments();
+            ArrangeFragmentsAlongPath();
         }
 
         public void AddFragment()
@@ -73,7 +77,7 @@ namespace Snake
             }
         }
 
-        private void UpdateFragments()
+        private void ArrangeFragmentsAlongPath()
         {
             var positionOnPath = _path.Evaluate(_snakeFragmentsInUse.Count).GetEnumerator();
             positionOnPath.MoveNext();

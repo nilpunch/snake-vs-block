@@ -17,14 +17,11 @@ namespace Snake
         public void Init(Camera gameCamera)
         {
             _gameCamera = gameCamera;
-        }
-
-        private void Awake()
-        {
+            
             _delta = new ReactiveProperty<Vector2>(Vector2.zero);
             _absolute = new ReactiveProperty<Vector2>(Vector2.zero);
-        }
 
+        }
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
             _absolute.Value = _gameCamera.ScreenToWorldPoint(eventData.position);

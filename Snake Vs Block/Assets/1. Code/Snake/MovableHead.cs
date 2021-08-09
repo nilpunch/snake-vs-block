@@ -11,19 +11,18 @@ namespace Snake
         [SerializeField] private float _speedX = 5f;
         [SerializeField] private float _speedY = 5f;
 
-        private float _accumulatedOffset;
+        private float _accumulatedXOffset;
         private Rigidbody2D _rigidbody;
-        
+
         Vector3 ITarget.Position => transform.position;
+        public event Action PositionChanged;
 
         public void Init(IMovingInput movingInput)
         {
             if (movingInput == null)
                 throw new ArgumentNullException(nameof(movingInput));
             
-            movingInput.Delta
-                .Subscribe(OnDeltaMove)
-                .AddTo(this);
+            movingInput.Delta.Subscribe(OnDeltaInput).AddTo(this);
         }
 
         private void Awake()
@@ -31,16 +30,24 @@ namespace Snake
             _rigidbody = GetComponent<Rigidbody2D>();
         }
 
-        private void Update()
+        public void FixedUpdate()
         {
-            transform.position += Vector3.right * (_accumulatedOffset * Time.deltaTime * _speedX);
-            _accumulatedOffset -= _accumulatedOffset * Time.deltaTime * _speedX;
-            transform.position += Vector3.up * (_speedY * Time.deltaTime);
+            PositionChanged?.Invoke();
+
+            Vector2 movement = Vector2.right * (_accumulatedXOffset * _speedX) + Vector2.up * _speedY;
+            _rigidbody.MovePosition(_rigidbody.position + movement * Time.deltaTime);
+            
+            _accumulatedXOffset -= _accumulatedXOffset * Time.deltaTime * _speedX;
         }
 
-        private void OnDeltaMove(Vector2 delta)
+        private void OnCollisionEnter2D(Collision2D _)
         {
-            _accumulatedOffset += delta.x;
+            _accumulatedXOffset = 0f;
+        }
+
+        private void OnDeltaInput(Vector2 delta)
+        {
+            _accumulatedXOffset += delta.x;
         }
     }
 }
