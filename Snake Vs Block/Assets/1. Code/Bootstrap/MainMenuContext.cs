@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Snake.Boot
+namespace SnakeVsBlock.Boot
 {
     public class MainMenuContext : MonoBehaviour
     {

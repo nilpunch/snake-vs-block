@@ -1,4 +1,4 @@
-﻿namespace Snake.Domain
+﻿namespace SnakeVsBlock.Domain
 {
     public class NullState : IState
     {

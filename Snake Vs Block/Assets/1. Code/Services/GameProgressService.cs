@@ -1,7 +1,7 @@
 ﻿using System;
-using Snake.Boot;
+using SnakeVsBlock.Boot;
 
-namespace Snake.Domain
+namespace SnakeVsBlock.Domain
 {
     public class GameProgressService
     {

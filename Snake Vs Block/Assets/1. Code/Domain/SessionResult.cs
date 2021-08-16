@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Snake.Domain
+namespace SnakeVsBlock.Domain
 {
     public readonly struct SessionResult
     {

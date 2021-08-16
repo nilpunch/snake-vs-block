@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace Snake.Domain
+namespace SnakeVsBlock.Domain
 {
     public class StateMachine : IStateMachine, IDisposable
     {

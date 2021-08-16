@@ -1,4 +1,4 @@
-﻿namespace Snake.Boot
+﻿namespace SnakeVsBlock.Boot
 {
     public interface ISaveLoader<T>
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Snake
+namespace SnakeVsBlock
 {
     public class Pool<T> where T : MonoBehaviour
     {

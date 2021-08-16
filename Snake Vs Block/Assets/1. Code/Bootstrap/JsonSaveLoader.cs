@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using Snake.Domain;
+using SnakeVsBlock.Domain;
 using UnityEngine;
 
-namespace Snake.Boot
+namespace SnakeVsBlock.Boot
 {
     public class JsonSaveLoader<T> : ISaveLoader<T> where T : new()
     {

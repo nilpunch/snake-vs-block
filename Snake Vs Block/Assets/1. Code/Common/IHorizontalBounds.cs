@@ -1,4 +1,4 @@
-﻿namespace Snake
+﻿namespace SnakeVsBlock
 {
     public interface IHorizontalBounds
     {

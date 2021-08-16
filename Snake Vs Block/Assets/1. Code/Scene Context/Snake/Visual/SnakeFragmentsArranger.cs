@@ -1,26 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Snake
+namespace SnakeVsBlock
 {
-    [CreateAssetMenu]
-    public class BalanceSettings : ScriptableObject
-    {
-        [SerializeField] private float _minimumNumberTickingDelay = 0.1f;
-        [SerializeField] private float _maximumNumberTickingDelay = 0.4f;
-        [SerializeField] private float _timeForTickingSpeedUp = 1f;
-
-        public float MinimumNumberTickingDelay => _minimumNumberTickingDelay;
-
-        public float MaximumNumberTickingDelay => _maximumNumberTickingDelay;
-
-        public float TimeForTickingSpeedUp => _timeForTickingSpeedUp;
-    }
-    
     public class SnakeFragmentsArranger : MonoBehaviour
     {
+        [SerializeField] private SnakeSettings _snakeSettings = null;
         [SerializeField] private SnakeFragment _snakeFragmentPrefab = null;
+        [SerializeField] private float _removingTime = 0.05f;
 
         private Queue<SnakeFragment> _snakeFragmentsInUse;
         private Pool<SnakeFragment> _snakeFragmentPool;
@@ -42,9 +31,6 @@ namespace Snake
         {
             if (Input.GetKeyDown(KeyCode.Z))
                 AddFragment();
-            
-            if (Input.GetKeyDown(KeyCode.X))
-                RemoveFragment(0.5f);
         }
 
         private void OnDestroy()
@@ -52,21 +38,38 @@ namespace Snake
             _path.Updated -= OnPathUpdated;
         }
 
+        public void SetSnakeLenght(int snakeLenght)
+        {
+            if (snakeLenght < 0)
+                throw new ArgumentOutOfRangeException(nameof(snakeLenght));
+            
+            if (_snakeFragmentsInUse.Count < snakeLenght)
+                while (_snakeFragmentsInUse.Count != snakeLenght)
+                    AddFragment();
+            
+            if (_snakeFragmentsInUse.Count > snakeLenght)
+                while (_snakeFragmentsInUse.Count != snakeLenght)
+                    RemoveFragment();
+        }
+        
         public void AddFragment()
         {
             _snakeFragmentsInUse.Enqueue(_snakeFragmentPool.Get());
         }
 
-        public void RemoveFragment(float delay)
+        public void RemoveFragment()
         {
-            _snakeFragmentPool.Return(_snakeFragmentsInUse.Dequeue());
+            var removedFragment = _snakeFragmentsInUse.Dequeue();
+            removedFragment.PlayDeathFx();
+            _snakeFragmentPool.Return(removedFragment);
 
-            _pathOffset += _snakeFragmentPrefab.Radius * 2f;
+            _pathOffset += _snakeSettings.SnakeHeadRadius * 2f;
 
             if (_pathOffsetTween != null)
                 _pathOffsetTween.Kill();
             
-            _pathOffsetTween = DOTween.To(() => _pathOffset, value => _pathOffset = value, 0f, delay);
+            _pathOffsetTween = DOTween.To(() => _pathOffset, value => _pathOffset = value, 0f,
+                _removingTime);
         }
 
         private void OnPathUpdated()
@@ -75,7 +78,7 @@ namespace Snake
                 return;
             
             var positionOnPath = _path
-                .Evaluate(_snakeFragmentsInUse.Count, _snakeFragmentPrefab.Radius, _pathOffset).GetEnumerator();
+                .Evaluate(_snakeFragmentsInUse.Count, _snakeSettings.SnakeHeadRadius, _pathOffset).GetEnumerator();
             positionOnPath.MoveNext();
 
             foreach (var snakeFragment in _snakeFragmentsInUse)

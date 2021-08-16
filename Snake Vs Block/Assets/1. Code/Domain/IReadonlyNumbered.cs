@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Snake.Domain
+namespace SnakeVsBlock.Domain
 {
     public interface IReadonlyNumbered
     {

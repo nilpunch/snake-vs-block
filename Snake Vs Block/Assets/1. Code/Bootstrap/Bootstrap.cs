@@ -1,8 +1,8 @@
 ﻿using System;
-using Snake.Domain;
+using SnakeVsBlock.Domain;
 using UnityEngine;
 
-namespace Snake.Boot
+namespace SnakeVsBlock.Boot
 {
     public class Bootstrap : MonoBehaviour
     {

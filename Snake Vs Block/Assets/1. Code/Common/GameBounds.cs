@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Snake
+namespace SnakeVsBlock
 {
     public class GameBounds : MonoBehaviour, IHorizontalBounds
     {

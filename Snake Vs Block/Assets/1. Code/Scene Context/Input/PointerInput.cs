@@ -3,7 +3,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Snake
+namespace SnakeVsBlock
 {
     public class PointerInput : MonoBehaviour, IMovingInput, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {

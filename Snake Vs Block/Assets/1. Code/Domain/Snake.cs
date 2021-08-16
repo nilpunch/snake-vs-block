@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Snake.Domain
+namespace SnakeVsBlock.Domain
 {
     public class Snake : INumbered
     {

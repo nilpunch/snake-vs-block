@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Snake.Domain;
+using SnakeVsBlock.Domain;
 using UnityEngine;
 
-namespace Snake
+namespace SnakeVsBlock
 {
-    public class BlocksFactory
+    public class BlocksFactory : IDisposable
     {
+        private readonly INumbered _snake;
         private readonly Score _score;
         private readonly IHorizontalBounds _horizontalBounds;
-        private readonly Pool<VisualBlock> _blocksPool;
+        private readonly Pool<BlockContext> _blocksPool;
         private readonly BlockNumbersGenerator _numbersGenerator;
 
         private readonly List<IDisposable> _blockPresenters;
 
-        public BlocksFactory(INumbered snake, Score score, VisualBlock prefab, IHorizontalBounds horizontalBounds)
+        public BlocksFactory(INumbered snake, Score score, BlockContext prefab, IHorizontalBounds horizontalBounds, Transform root)
         {
+            _snake = snake;
             _score = score;
             _horizontalBounds = horizontalBounds;
             _numbersGenerator = new BlockNumbersGenerator(snake, 50);
-            _blocksPool = new Pool<VisualBlock>(prefab, null);
+            _blocksPool = new Pool<BlockContext>(prefab, root);
+
+            _blockPresenters = new List<IDisposable>();
         }
 
         public void GenerateBlocks(int blocksAmount, float coordinateY)
@@ -31,38 +35,29 @@ namespace Snake
             
             foreach (var number in _numbersGenerator.GenerateNumbers(blocksAmount))
             {
-                VisualBlock visualBlock = _blocksPool.Get();
+                if (number == 0)
+                {
+                    newBlockPosition += positionIncrement;
+                    continue;
+                }
                 
-                visualBlock.Prepare();
-                visualBlock.SetUnitSize(unitSize);
-                visualBlock.SetPosition(newBlockPosition);
+                BlockContext visualBlock = _blocksPool.Get();
+                
+                visualBlock.Visual.Prepare();
+                visualBlock.Visual.SetUnitSize(unitSize);
+                visualBlock.Visual.SetPosition(newBlockPosition);
 
                 newBlockPosition += positionIncrement;
                 
                 Block block = new Block(number, _score);
-                BlockPresenter blockPresenter = new BlockPresenter(block, visualBlock);
-
+                BlockPresenter blockPresenter = new BlockPresenter(_snake, block, visualBlock);
                 _blockPresenters.Add(blockPresenter);
             }
         }
-    }
-
-    public class BlockPresenter : IDisposable
-    {
-        private readonly Block _blockModel;
-        private readonly VisualBlock _blockView;
-
-        public BlockPresenter(Block blockModel, VisualBlock blockView)
-        {
-            _blockModel = blockModel ?? throw new ArgumentNullException(nameof(blockModel));
-            _blockView = blockView ?? throw new ArgumentNullException(nameof(blockView));
-            
-            
-        }
-
+        
         public void Dispose()
         {
-            
+            _blockPresenters.ForEach(presenter => presenter.Dispose());
         }
     }
 }

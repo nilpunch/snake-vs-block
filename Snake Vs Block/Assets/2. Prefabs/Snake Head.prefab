@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 7737714981747513226}
   - component: {fileID: 4679631135965842694}
   - component: {fileID: 3930333543209685420}
+  - component: {fileID: 5707574505380146111}
   m_Layer: 0
   m_Name: Snake Head
   m_TagString: Untagged
@@ -62,8 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 768786d342374ad79f81441e1e0b4a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedX: 10
-  _speedY: 5
+  _snakeSettings: {fileID: 11400000, guid: 0da467a13aefe20449b48d3c6a48572c, type: 2}
 --- !u!50 &4679631135965842694
 Rigidbody2D:
   serializedVersion: 4
@@ -98,6 +98,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minimumDistanceForUpdate: 0.01
+--- !u!114 &5707574505380146111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737714981747513227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12ac5d748a44ff5bab4e060030dcccd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7737714981435982949
 PrefabInstance:
   m_ObjectHideFlags: 0

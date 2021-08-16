@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Snake
+namespace SnakeVsBlock
 {
     public class Path
     {

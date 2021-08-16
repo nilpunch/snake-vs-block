@@ -2,12 +2,11 @@
 using UniRx;
 using UnityEngine;
 
-namespace Snake
+namespace SnakeVsBlock
 {
     public class MovableHead : MonoBehaviour, ITarget
     {
-        [SerializeField] private float _speedX = 5f;
-        [SerializeField] private float _speedY = 5f;
+        [SerializeField] private SnakeSettings _snakeSettings = null;
 
         private float _accumulatedXOffset;
         private Rigidbody2D _rigidbody;
@@ -35,15 +34,18 @@ namespace Snake
         {
             PositionChanged?.Invoke();
 
-            Vector2 movement = Vector2.right * (_accumulatedXOffset * _speedX) + Vector2.up * _speedY;
+            Vector2 movement = Vector2.right * (_accumulatedXOffset * _snakeSettings.SnakeHorizontalSpeed) 
+                               + Vector2.up * _snakeSettings.SnakeVerticalSpeed;
 
             Vector2 movePosition = _rigidbody.position + movement * Time.deltaTime;
 
-            movePosition.x = Mathf.Clamp(movePosition.x, _horizontalBounds.Left, _horizontalBounds.Right);
+            movePosition.x = Mathf.Clamp(movePosition.x,
+                _horizontalBounds.Left + _snakeSettings.SnakeHeadRadius,
+                _horizontalBounds.Right - _snakeSettings.SnakeHeadRadius);
             
             _rigidbody.MovePosition(movePosition);
             
-            _accumulatedXOffset -= _accumulatedXOffset * Time.deltaTime * _speedX;
+            _accumulatedXOffset -= _accumulatedXOffset * Time.deltaTime * _snakeSettings.SnakeHorizontalSpeed;
         }
 
         public void MoveX(Vector2 delta)

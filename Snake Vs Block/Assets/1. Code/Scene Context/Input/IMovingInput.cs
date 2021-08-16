@@ -2,7 +2,7 @@
 using UniRx;
 using UnityEngine;
 
-namespace Snake
+namespace SnakeVsBlock
 {
     public interface IMovingInput
     {
